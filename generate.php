@@ -12,14 +12,25 @@
 // yum install php-gd
 // yum install php5-gd
 
+// Check Required for exists Extension GD or not
+if(!extension_loaded('GD') || !function_exists('imagecreatetruecolor')) exit('Note: Extension GD is not loaded. to <a href="http://php.net/gd">Install</a>');
+
 session_start();
 
 // Check if set POST 'captcha' AND if 'SESSION' Equals 'captcha'
 if((isset($_POST['captcha']) && isset($_SESSION['captcha'])) && (strtolower($_POST['captcha']) == strtolower($_SESSION['captcha']))){
 	unset($_SESSION['captcha']);
 	echo true;
-}else{
-	if(isset($_GET['captcha'])){
+}elseif(isset($_GET['captcha'])){
+	if($_GET['captcha'] === 'sound' && isset($_SESSION['captcha'])){
+		global $sound_file;
+		$sound_files = str_split(strtolower($_SESSION['captcha']));
+		foreach ($sound_files as $key => $value) {
+			$sound_file .= file_get_contents('sound/'.$sound_files[$key].'.mp3');
+		}
+		header('Content-Type: audio/mpeg');
+		echo $sound_file;
+	}elseif($_GET['captcha'] === 'image'){
 		// function generate random characters + numbers
 		function generateRandStr($length){
 			for($i=0; $i<$length; $i++){
@@ -36,24 +47,24 @@ if((isset($_POST['captcha']) && isset($_SESSION['captcha'])) && (strtolower($_PO
 
 		// setting the image header in order to proper display the image
 		header("Content-Type: image/png");
-
+		
 		// Create the image (Width=200,Height=50)
 		$im = imagecreatetruecolor(200, 50);
 
 		// Background color
 		imagefilledrectangle($im, 0, 0, 200, 50, 0xFFFFFF);
 
-		// Add the text
-		imagettftext($im, 20, 1, 12, 36, 0x000000, './Ubuntu-B.ttf', $_SESSION['captcha']);
+		// Add the (image,font-size,angle,y,x,color-Text,font-file,text)
+		imagettftext($im, 20, 0, 12, 36, 0x000000, './font/Ubuntu-B.ttf', $_SESSION['captcha']);
 
 		// Using imagepng() results in clearer text compared with imagejpeg()
 		imagepng($im);
 		imagedestroy($im);
-	}else{
-		// Simple form HTML to send POST captcha
-		header("Content-Type: text/html");
-		$TPL = file_get_contents('form.tpl');
-		echo $TPL;
 	}
+}else{
+	// Simple form HTML to send POST captcha
+	header("Content-Type: text/html");
+	$TPL = file_get_contents('form.tpl');
+	echo $TPL;
 }
 ?>
