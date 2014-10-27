@@ -33,18 +33,6 @@ sudo /etc/init.d/apache2 restart
 ```
 read more: http://php.net/manual/en/image.installation.php
 
-### 1. Some basic html
+### This Screenshot
 
-```html
-<!DOCTYPE html>
-<html>
-    <head></head>
-    <body>
-        <img src="generate.php?captcha" />
-        <form action="generate.php" method="post">
-            <input type="text" name="captcha" />
-            <input type="submit" value="check" />
-        </form>
-    </body>
-</html>
-```
+![Screenshot](Screenshot.png)

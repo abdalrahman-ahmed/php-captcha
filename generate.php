@@ -22,11 +22,13 @@ if((isset($_POST['captcha']) && isset($_SESSION['captcha'])) && (strtolower($_PO
 	unset($_SESSION['captcha']);
 	echo true;
 }elseif(isset($_GET['captcha'])){
+	$http = isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'].'://' : 'http://';
+	if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] != $http.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']) exit;
+
 	if($_GET['captcha'] === 'sound' && isset($_SESSION['captcha'])){
-		global $sound_file;
 		$sound_files = str_split(strtolower($_SESSION['captcha']));
 		foreach ($sound_files as $key => $value) {
-			$sound_file .= file_get_contents('sound/'.$sound_files[$key].'.mp3');
+			@$sound_file .= file_get_contents('sound/'.$sound_files[$key].'.mp3');
 		}
 		header('Content-Type: audio/mpeg');
 		echo $sound_file;
@@ -45,26 +47,56 @@ if((isset($_POST['captcha']) && isset($_SESSION['captcha'])) && (strtolower($_PO
 		// Create new SESSION captcha 
 		$_SESSION['captcha'] = generateRandStr(10);
 
+		// Image width
+		$width = 200;
+
+		// Image height
+		$height = 50;
+
+		// White color
+		$white = 0xFFFFFF;
+
+		// Black color
+		$black = 0x000000;
+
+		// Font file 
+		$fontFile = './font/Ubuntu-B.ttf';
+
+		// y - Alignment from left to right
+		$y = 12;
+
+		// x - Alignment from top to bottom
+		$x = 36;
+
+		// angle - rotate text angle, here function "rand" generate random number from [0-6] or [-6-0]
+		$angle = rand(6,-6);
+
+		// Font size
+		$fontSize = 20;
+
+		// Text Captcha
+		$text = $_SESSION['captcha'];
+
 		// setting the image header in order to proper display the image
 		header("Content-Type: image/png");
 		
 		// Create the image (Width=200,Height=50)
-		$im = imagecreatetruecolor(200, 50);
+		$image = imagecreatetruecolor($width, $height);
 
 		// Background color
-		imagefilledrectangle($im, 0, 0, 200, 50, 0xFFFFFF);
+		imagefilledrectangle($image, 0, 0, $width, $height, $white);
 
-		// Add the (image,font-size,angle,y,x,color-Text,font-file,text)
-		imagettftext($im, 20, 0, 12, 36, 0x000000, './font/Ubuntu-B.ttf', $_SESSION['captcha']);
+		// Add the (image,font-size,angle,y,x,text-color,font-file,text)
+		imagettftext($image, $fontSize, $angle, $y, $x, $black, $fontFile, $text);
 
 		// Using imagepng() results in clearer text compared with imagejpeg()
-		imagepng($im);
-		imagedestroy($im);
+		imagepng($image);
+		imagedestroy($image);
 	}
 }else{
 	// Simple form HTML to send POST captcha
 	header("Content-Type: text/html");
-	$TPL = file_get_contents('form.tpl');
+	$TPL = file_get_contents('./tpl/form.tpl');
 	echo $TPL;
 }
 ?>
