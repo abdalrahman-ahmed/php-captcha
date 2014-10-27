@@ -1,16 +1,29 @@
 <?php
-// original source code is taken from:
-// https://github.com/alcrazy/php-captcha
-// copyright goes to Abdalrahman Ahmed
-// created by Abdalrahman Ahmed for generate.php
+/*
+ Generate random text to print it on image using PHP-GD book
+ @ Author      : Abdalrahman Ahmed
+ @ Author url  : https://github.com/abdalrahman-ahmed
+ @ License     : GNU GENERAL PUBLIC LICENSE  
+ @ Github url  : https://github.com/abdalrahman-ahmed/php-captcha
+ @ File name   : generate.php
+ @ Copyright to: Abdalrahman Ahmed
+ @ version     : 1.0
+*/
 
-// PHP GD create a simple image with GD library
-// To Install Extension "GD"
-// on Debian linux ~ # 
-// apt-get install php5-gd
-// on Redhat linux ~ # 
-// yum install php-gd
-// yum install php5-gd
+# Needed
+/*
+PHP GD create a simple image with GD library
+To Install Extension "GD" on linux, open terminal and type:
+on Debian linux ~ # 
+sudo apt-get install php5-gd
+--------
+on Redhat linux ~ # 
+sudo yum install php-gd
+sudo yum install php5-gd
+--------
+after installation, restart your apache server using:
+sudo /etc/init.d/apache2 restart
+*/
 
 // Check Required for exists Extension GD or not
 if(!extension_loaded('GD') || !function_exists('imagecreatetruecolor')) exit('Note: Extension GD is not loaded. to <a href="http://php.net/gd">Install</a>');
