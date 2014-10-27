@@ -12,14 +12,15 @@ created by Abdalrahman Ahmed for form.tpl
 	<script type="text/javascript">
 	window.onload = function (e){
 		e.preventDefault();
+		var audioElement = document.createElement('audio');
 		document.getElementById('recaptcha').onclick = function (e){
 			e.preventDefault();
 			document.getElementById('captcha').innerHTML = "<img src=\"generate.php?captcha=image&time="+new Date().getTime()+"\">";
 		};
 		document.getElementById('soundcaptcha').onclick = function (e){
 			e.preventDefault();
-			var audioElement = document.createElement('audio');
-			audioElement.setAttribute('src', 'generate.php?captcha=sound');
+			audioElement.ended = true;
+			audioElement.setAttribute('src', 'generate.php?captcha=sound&time='+new Date().getTime());
 			audioElement.play();
 		};
 		document.getElementById('showHide').onclick = function (e){
