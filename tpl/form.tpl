@@ -14,7 +14,7 @@ created by Abdalrahman Ahmed for form.tpl
 		e.preventDefault();
 		document.getElementById('recaptcha').onclick = function (e){
 			e.preventDefault();
-			document.getElementById('captcha').innerHTML = "<img src=\"generate.php?captcha=image\">";
+			document.getElementById('captcha').innerHTML = "<img src=\"generate.php?captcha=image&time="+new Date().getTime()+"\">";
 		};
 		document.getElementById('soundcaptcha').onclick = function (e){
 			e.preventDefault();
