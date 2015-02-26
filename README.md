@@ -3,7 +3,7 @@
 php-captcha - generate security code using PHP
 
 
-## It's so easy:
+## How to use:
 
 #### PHP GD create a simple image with GD library
 ##### To Install Extension "GD" if not found it in your server
